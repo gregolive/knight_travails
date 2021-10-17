@@ -68,6 +68,10 @@ class BoardNode
 end
 
 def knight_moves(start, goal, queue = [])
+  if start.all? { |pos| pos.between?(1, 8) } && goal.all? { |pos| pos.between?(1, 8) }
+    return 'ERROR: These coordinates are not consistent with an 8x8 chessboard.'
+  end
+
   puts chess_board
   knight = BoardNode.new(start, nil)
   until knight.location == goal
