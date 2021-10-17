@@ -2,26 +2,28 @@
 
 # Prints the fastest route for a knight to move between two locations on a chess board
 
+# rubocop:disable Style/ClassVars
+
 def chess_board
   <<~HEREDOC
-      ┏━━┳━━┳━━┳━━┳━━┳━━┳━━┳━━┓
-    1 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    2 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    3 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    4 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    5 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    6 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    7 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
-      ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
-    8 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
-      ┗━━┻━━┻━━┻━━┻━━┻━━┻━━┻━━┛
-  　　 1  2  3  4  5  6  7  8
+        ┏━━┳━━┳━━┳━━┳━━┳━━┳━━┳━━┓
+      1 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      2 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      3 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      4 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      5 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      6 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      7 ┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃
+        ┣━━╋━━╋━━╋━━╋━━╋━━╋━━╋━━┫
+      8 ┃░░┃  ┃░░┃  ┃░░┃  ┃░░┃  ┃
+        ┗━━┻━━┻━━┻━━┻━━┻━━┻━━┻━━┛
+    　　 1  2  3  4  5  6  7  8
   HEREDOC
 end
 
@@ -40,7 +42,7 @@ end
 class BoardNode
   attr_reader :location, :parent
 
-  MOVES = [[1,-2], [2,-1], [2,1], [1,2], [-1,2], [-2,1], [-2,-1], [-1,-2]]
+  MOVES = [[1, -2], [2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2]].freeze
 
   @@past_moves = []
 
@@ -51,9 +53,9 @@ class BoardNode
   end
 
   def possible_moves
-    moves = MOVES.map { |dir| [(@location[0] + dir[0]),(@location[1] + dir[1])]}
-                 .keep_if { |move| possible(move) }
-                 .map { |move| BoardNode.new(move, self) }
+    MOVES.map { |dir| [(@location[0] + dir[0]), (@location[1] + dir[1])] }
+         .keep_if { |move| possible(move) }
+         .map { |move| BoardNode.new(move, self) }
   end
 
   def possible(move)
@@ -61,7 +63,7 @@ class BoardNode
   end
 
   def on_board(move)
-    move[0].between?(1,8) && move[1].between?(1,8) ? true : false
+    move[0].between?(1, 8) && move[1].between?(1, 8) ? true : false
   end
 end
 
@@ -70,9 +72,11 @@ def knight_moves(start, goal, queue = [])
   knight = BoardNode.new(start, nil)
   until knight.location == goal
     knight.possible_moves.each { |move| queue.push(move) }
-    knight = queue.shift()
+    knight = queue.shift
   end
   print_moves(knight)
 end
 
-knight_moves([3,3],[4,3])
+knight_moves([3, 3], [4, 3])
+
+# rubocop:enable Style/ClassVars
